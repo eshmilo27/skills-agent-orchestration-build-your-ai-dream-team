@@ -1,0 +1,36 @@
+{
+  "projects": [
+    {
+      "name": "Contributor Onboarding",
+      "owner": "Aisha Rahman",
+      "status": "On track",
+      "recentActivity": "Published the refreshed first-week checklist and paired with three new contributors.",
+      "priority": "High",
+      "summary": "Make the path from first issue to first merged contribution clear, welcoming, and easy to repeat."
+    },
+    {
+      "name": "API Reliability",
+      "owner": "Mateo Silva",
+      "status": "At risk",
+      "recentActivity": "Error-budget review found a slow endpoint in the billing workflow; a fix is in review.",
+      "priority": "Critical",
+      "summary": "Reduce avoidable service interruptions by addressing the highest-impact latency and alerting gaps."
+    },
+    {
+      "name": "Design System Refresh",
+      "owner": "Priya Nair",
+      "status": "In progress",
+      "recentActivity": "Finalized button and form patterns and opened the accessibility review for feedback.",
+      "priority": "Medium",
+      "summary": "Bring shared interface patterns into one dependable, accessible toolkit for product teams."
+    },
+    {
+      "name": "Community Events",
+      "owner": "Jordan Lee",
+      "status": "Planning",
+      "recentActivity": "Confirmed speakers for the October maintainer roundtable and drafted the event brief.",
+      "priority": "Low",
+      "summary": "Create a steady rhythm of practical gatherings where maintainers can share context and support."
+    }
+  ]
+}

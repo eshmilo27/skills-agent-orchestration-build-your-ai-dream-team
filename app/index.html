@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Pulse</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="dashboard" aria-labelledby="page-title">
+    <header class="dashboard-header">
+      <p class="eyebrow">Team workspace</p>
+      <h1 id="page-title">Project Pulse</h1>
+      <p class="dashboard-intro">A shared view of what is moving, what needs attention, and who is carrying it forward.</p>
+    </header>
+
+    <section class="projects-section" aria-labelledby="projects-heading">
+      <div class="section-heading">
+        <h2 id="projects-heading">Current projects</h2>
+        <p id="project-count" class="project-count"></p>
+      </div>
+      <p id="load-status" class="load-status" role="status" aria-live="polite">Loading project data...</p>
+      <div id="project-list" class="project-list" aria-busy="true"></div>
+    </section>
+  </main>
+
+  <template id="project-card-template">
+    <article class="project-card">
+      <div class="project-card-header">
+        <div>
+          <p class="project-card-label">Project</p>
+          <h3 class="project-name"></h3>
+        </div>
+        <span class="status-badge"></span>
+      </div>
+      <dl class="project-meta">
+        <div>
+          <dt>Owner</dt>
+          <dd class="project-owner"></dd>
+        </div>
+        <div>
+          <dt>Priority</dt>
+          <dd class="project-priority"></dd>
+        </div>
+      </dl>
+      <div class="project-detail">
+        <h4>Recent activity</h4>
+        <p class="project-activity"></p>
+      </div>
+      <div class="project-detail">
+        <h4>Summary</h4>
+        <p class="project-summary"></p>
+      </div>
+    </article>
+  </template>
+
+  <script>
+    const projectList = document.querySelector('#project-list');
+    const loadStatus = document.querySelector('#load-status');
+    const projectCount = document.querySelector('#project-count');
+    const cardTemplate = document.querySelector('#project-card-template');
+
+    function showMessage(message, isError = false) {
+      loadStatus.textContent = message;
+      loadStatus.classList.toggle('is-error', isError);
+      projectList.setAttribute('aria-busy', 'false');
+    }
+
+    function renderProjects(projects) {
+      projectList.replaceChildren();
+      projectCount.textContent = `${projects.length} ${projects.length === 1 ? 'project' : 'projects'}`;
+
+      projects.forEach((project) => {
+        const card = cardTemplate.content.cloneNode(true);
+        card.querySelector('.project-name').textContent = project.name;
+        card.querySelector('.project-owner').textContent = project.owner;
+        card.querySelector('.status-badge').textContent = project.status;
+        card.querySelector('.project-activity').textContent = project.recentActivity;
+        card.querySelector('.project-priority').textContent = project.priority;
+        card.querySelector('.project-summary').textContent = project.summary || 'No summary provided.';
+        projectList.append(card);
+      });
+
+      showMessage(projects.length ? 'Project data updated.' : 'No projects are available right now.');
+    }
+
+    async function loadProjects() {
+      try {
+        const response = await fetch('project-data.json');
+        if (!response.ok) {
+          throw new Error(`Project data request failed with status ${response.status}.`);
+        }
+        const data = await response.json();
+        if (!data || !Array.isArray(data.projects)) {
+          throw new Error('Project data must contain a projects array.');
+        }
+        renderProjects(data.projects);
+      } catch (error) {
+        projectCount.textContent = '';
+        projectList.replaceChildren();
+        showMessage(`Unable to load project data. ${error.message}`, true);
+      }
+    }
+
+    loadProjects();
+  </script>
+</body>
+</html>
